@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'com.demo'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11 //本项目均基于 jdk 11 构建
+targetCompatibility = 11 //本项目均基于 jdk 11 构建
+
+repositories {
+    mavenLocal()
+    maven {url 'https://maven.aliyun.com/nexus/content/groups/public'}
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.14'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.7'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
