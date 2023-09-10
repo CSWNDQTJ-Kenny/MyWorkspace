@@ -20,9 +20,9 @@ public class CaffeineConfig {
         return new KeyGenerator() {
             @Override
             public Object generate(Object target, Method method, Object... params) {
-                System.out.println("***" +target);
-                System.out.println("***" +method);
-                System.out.println("***" +params);
+                System.out.println("***" + target);
+                System.out.println("***" + method);
+                System.out.println("***" + params);
                 return method.getName() + "[" + Arrays.asList(params).toString() + "]";
             }
         };
