@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * Caffeine组件包含有如下的使用特点:
@@ -36,9 +38,9 @@ public class CaffeineTest {
         System.out.println("【已超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny")); // 获取数据
     }
 
-    // Case 02
+    // Case 02 手动加载：手动同步加载，手动异步加载
     @Test
-    void sync_case_02() throws Exception { // 测试Caffeine组件的基本操作
+    void case_02_manual_sync() throws Exception { // 测试Caffeine组件的基本操作
         Cache<String, String> cache = Caffeine.newBuilder() // 构建一个新的Caffeine实例
                 .maximumSize(100) // 设置缓存之中保存的最大数据量
                 .expireAfterAccess(3L, TimeUnit.SECONDS) // 如无访问 则3秒后失效
@@ -46,8 +48,33 @@ public class CaffeineTest {
         cache.put("Kenny", "cswndqtj@sina.com"); // 设置缓存项
         System.out.println("【未超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny")); // 获取数据
         TimeUnit.SECONDS.sleep(5); // 5秒后超时
+        System.out.println("【已超时获取缓存数据】Kenny = " + cache.get("Kenny", new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                System.out.println("【失效处理】没有发现 KEY = " + s + " 的数据，要进行失效处理控制。");
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                return "【EXPIRY】" + s; // 失效数据的返回
+            }
+        })); // 获取数据
+    }
+
+    @Test
+    void case_02_manual_async() throws Exception { // 测试Caffeine组件的基本操作
+        AsyncCache<String, String> cache = Caffeine.newBuilder() // 构建一个新的Caffeine实例
+                .maximumSize(100) // 设置缓存之中保存的最大数据量
+                .expireAfterAccess(3L, TimeUnit.SECONDS) // 如无访问 则3秒后失效
+                .executor(Executors.newSingleThreadExecutor())
+                .buildAsync();
+        cache.put("Kenny", CompletableFuture.completedFuture("cswndqtj@sina.com")); // 设置缓存项
+        System.out.println("【未超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny").get()); // 获取数据
+        TimeUnit.SECONDS.sleep(5); // 5秒后超时
         System.out.println("【已超时获取缓存数据】Kenny = " + cache.get("Kenny",
                 (key) -> {
+                    System.out.println("当前所在线程：" + Thread.currentThread().getName());
                     System.out.println("【失效处理】没有发现 KEY = " + key + " 的数据，要进行失效处理控制。");
                     try {
                         TimeUnit.SECONDS.sleep(2);
@@ -55,7 +82,8 @@ public class CaffeineTest {
                         throw new RuntimeException(e);
                     }
                     return "【EXPIRY】" + key; // 失效数据的返回
-                })); // 获取数据
+                }).get()); // 获取数据
+        System.out.println("当前所在线程：" + Thread.currentThread().getName());
     }
 
     // Case 03
@@ -77,7 +105,7 @@ public class CaffeineTest {
         System.out.println("【未超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny")); // 获取数据
         TimeUnit.SECONDS.sleep(5); // 5秒后超时
         cache.put("edu", "edu.heima.com"); // 缓存失效之后 继续追加新的数据
-        for (Map.Entry<String, String> entry : cache.getAll(List.of("Kenny", "edu")).entrySet()) { // 重新加载缓存
+        for (Map.Entry<String, String> entry : cache.getAll(List.of("Kenny", "edu", "ooxx")).entrySet()) { // 重新加载缓存
             System.out.println("【已超时获取缓存数据, 数据加载】key = " + entry.getKey() + ", value = " + entry.getValue()); // 加载数据
         }
 
@@ -97,12 +125,11 @@ public class CaffeineTest {
                         return "【LoadingCache】" + key; // 数据加载的返回结果
                     }
                 });
-
         cache.put("Kenny", "cswndqtj@sina.com"); // 设置缓存项
         System.out.println("【未超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny")); // 获取数据
         TimeUnit.SECONDS.sleep(5); // 5秒后超时
         cache.put("edu", "edu.heima.com"); // 缓存失效之后 继续追加新的数据
-        for (Map.Entry<String, String> entry : cache.getAll(List.of("Kenny", "edu")).entrySet()) { // 重新加载缓存
+        for (Map.Entry<String, String> entry : cache.getAll(List.of("Kenny", "edu", "xxoo")).entrySet()) { // 重新加载缓存
             System.out.println("【数据加载】key = " + entry.getKey() + ", value = " + entry.getValue()); // 加载数据
         }
         System.out.println("【已超时获取缓存数据】Kenny = " + cache.getIfPresent("Kenny")); // 获取数据
@@ -166,9 +193,6 @@ public class CaffeineTest {
         }
     }
 
-    @Test
-    void encode_utf8() {
-        System.out.println("\u4f60\u597d"); // 你好
-    }
+
 
 }

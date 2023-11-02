@@ -16,7 +16,11 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.14'
-    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.7'
+    implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.14'
+//    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
+//    implementation 'com.google.guava:guava:32.1.2-jre'
+//    implementation 'javax.cache:cache-api:1.1.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.14'
 }
 

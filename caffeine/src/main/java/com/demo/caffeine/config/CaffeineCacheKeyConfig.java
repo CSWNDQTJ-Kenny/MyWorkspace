@@ -13,7 +13,7 @@ import java.util.Arrays;
  * description :
  */
 @Configuration
-public class CaffeineConfig {
+public class CaffeineCacheKeyConfig {
 
     @Bean("myKeyGenerator")
     public KeyGenerator keyGenerator() {

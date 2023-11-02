@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -55,6 +56,18 @@ class CaffeineUtilTest {
                     }
                     return "[EXPIRY] " + key;
                 }));
+    }
+
+    @Test
+    void array_list_test() {
+        ArrayList<String> strList = new ArrayList<>();
+        strList.add("1");
+        strList.add("1");
+        System.out.println(strList);
+    }
+    @Test
+    void encode_utf8() {
+        System.out.println("\u4f60\u597d"); // 你好
     }
 
 }
