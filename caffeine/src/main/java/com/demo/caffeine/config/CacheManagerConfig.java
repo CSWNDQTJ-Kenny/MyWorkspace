@@ -1,7 +1,18 @@
 package com.demo.caffeine.config;
 
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.CaffeineSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.interceptor.SimpleKeyGenerator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * author  :
@@ -20,12 +31,12 @@ public class CacheManagerConfig {
 
     @Bean
     public CacheManager cacheManagerWithCacheLoading(){
-        logger.info("cacheManagerWithCacheLoading" );
+        System.out.println("cacheManagerWithCacheLoading");
         Caffeine caffeine = Caffeine.newBuilder()
                 .initialCapacity(100)
                 .maximumSize(1000)
 //                .refreshAfterWrite(5,TimeUnit.SECONDS)
-                .expireAfterWrite(50,TimeUnit.SECONDS);
+                .expireAfterWrite(50, TimeUnit.SECONDS);
 
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setAllowNullValues(true);
@@ -38,9 +49,9 @@ public class CacheManagerConfig {
 
 
     @Bean(name = "caffeine")
-    @Primary
+//    @Primary
     public CacheManager cacheManagerWithCaffeine(){
-        logger.info("This is cacheManagerWithCaffeine");
+        System.out.println("This is cacheManagerWithCaffeine");
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         Caffeine caffeine = Caffeine.newBuilder()
                 //cache的初始容量值
@@ -59,26 +70,26 @@ public class CacheManagerConfig {
         return cacheManager;
     }
 
-    @Bean(name = "caffeineSpec")
-    public CacheManager cacheManagerWithCaffeineFromSpec(){
-        CaffeineSpec spec = CaffeineSpec.parse(caffeineSpec);
-        Caffeine caffeine = Caffeine.from(spec);
-        //此方法等同于上面from(spec)
-//        Caffeine caffeine = Caffeine.from(caffeineSpec);
-
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        cacheManager.setCaffeine(caffeine);
-        cacheManager.setCacheNames(getNames());
-        return cacheManager;
-    }
+//    @Bean(name = "caffeineSpec")
+//    public CacheManager cacheManagerWithCaffeineFromSpec(){
+//        CaffeineSpec spec = CaffeineSpec.parse(caffeineSpec);
+//        Caffeine caffeine = Caffeine.from(spec);
+//        //此方法等同于上面from(spec)
+////        Caffeine caffeine = Caffeine.from(caffeineSpec);
+//
+//        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+//        cacheManager.setCaffeine(caffeine);
+//        cacheManager.setCacheNames(getNames());
+//        return cacheManager;
+//    }
 
     /**
      * 可以实现自己生成key的策略
      * */
-    @Bean(name = "SimpleKeyGenerator")
-    public KeyGenerator keyGenerator(){
-        return new SimpleKeyGenerator();
-    }
+//    @Bean(name = "SimpleKeyGenerator")
+//    public KeyGenerator keyGenerator(){
+//        return new SimpleKeyGenerator();
+//    }
 
     private static List<String> getNames(){
         List<String> names = new ArrayList<>(2);
