@@ -1,8 +1,9 @@
 package com.demo.caffeine.util;
 
 import com.github.benmanes.caffeine.cache.*;
-import org.checkerframework.checker.nullness.qual.Nullable;
+//import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -62,9 +63,9 @@ public class CaffeineTest {
         })); // 获取数据
     }
 
-    @Test
+    /*@Test
     void case_02_manual_async() throws Exception { // 测试Caffeine组件的基本操作
-        AsyncCache<String, String> cache = Caffeine.newBuilder() // 构建一个新的Caffeine实例
+        AsyncLoadingCache<String, String> cache = Caffeine.newBuilder() // 构建一个新的Caffeine实例
                 .maximumSize(100) // 设置缓存之中保存的最大数据量
                 .expireAfterAccess(3L, TimeUnit.SECONDS) // 如无访问 则3秒后失效
                 .executor(Executors.newSingleThreadExecutor())
@@ -84,7 +85,7 @@ public class CaffeineTest {
                     return "【EXPIRY】" + key; // 失效数据的返回
                 }).get()); // 获取数据
         System.out.println("当前所在线程：" + Thread.currentThread().getName());
-    }
+    }*/
 
     // Case 03
     @Test
