@@ -1,11 +1,8 @@
 package com.demo.caffeine.config;
 
 import com.github.benmanes.caffeine.cache.*;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -13,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * author  :
+ * author  : Kenny
  * time    :
  * description : 创建 Caffeine 缓存，
  * Caffeine 缓存最大的优势在于提供了一套完整的淘汰机制
@@ -176,7 +173,7 @@ public class CaffeineCacheConfig {
      * 注：writer的监控是同步执行的
      */
 
-    @Bean("WriterCache")
+    /*@Bean("WriterCache")
     public Cache<Integer, Integer> writerCache() {
         return Caffeine.newBuilder()
                 .recordStats()
@@ -216,7 +213,7 @@ public class CaffeineCacheConfig {
                         return value.get();
                     }
                 });
-    }
+    }*/
 
 
     /**
