@@ -2,7 +2,6 @@ package com.demo.caffeine.service;
 
 import com.demo.caffeine.annotation.SaveCache;
 import com.demo.caffeine.entity.Employee;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@CacheConfig(cacheNames = "caffeine")
+//@CacheConfig(cacheNames = "caffeine")
 public class CaffeineServiceV2 {
 
     @Cacheable

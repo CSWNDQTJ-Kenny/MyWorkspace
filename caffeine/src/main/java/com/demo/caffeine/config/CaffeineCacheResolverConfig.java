@@ -1,6 +1,7 @@
 package com.demo.caffeine.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.CacheResolver;
 import org.springframework.cache.interceptor.NamedCacheResolver;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CaffeineCacheResolverConfig {
     @Autowired
+    @Qualifier("CacheManagerWithCaffeine")
     private CacheManager cacheManager;
 
     @Bean("SimpleCacheResolver")

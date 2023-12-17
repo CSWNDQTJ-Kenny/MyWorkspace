@@ -3,10 +3,12 @@ package com.demo.caffeine.config;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,33 @@ public class CacheManagerConfig {
 //    @Value("${caffeine.spec}")
 //    private String caffeineSpec;
 
+    //@Autowired
+    //private CacheLoader cacheLoader;
+
     @Autowired
-    private CacheLoader cacheLoader;
+    @Qualifier("SimpleStringCacheLoader")
+    private CacheLoader simpleStringCacheLoader;
+
+    @Autowired
+    @Qualifier("T0PnLCaffeineCache")
+    private Caffeine<Object, Object> t0PnLCaffeineCache;
+
+    @Primary
+    @Bean("T0PnLCacheManager")
+    public CacheManager t0PnLCacheManager() {
+        System.out.println("Now is T0PnLCacheManager");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setAllowNullValues(true);
+        cacheManager.setCaffeine(t0PnLCaffeineCache);
+        //cacheManager.setCacheLoader(simpleStringCacheLoader);
+        cacheManager.setCacheNames(List.of("T0PnLCache"));
+        return cacheManager;
+    }
 
 
-    @Bean
+    @Bean("CacheManagerWithCacheLoading")
     public CacheManager cacheManagerWithCacheLoading(){
-        System.out.println("cacheManagerWithCacheLoading");
+        System.out.println("Now is cacheManagerWithCacheLoading");
         Caffeine caffeine = Caffeine.newBuilder()
                 .initialCapacity(100)
                 .maximumSize(1000)
@@ -46,10 +68,10 @@ public class CacheManagerConfig {
 
 
 
-    @Bean(name = "caffeine")
+    @Bean(name = "CacheManagerWithCaffeine")
 //    @Primary
     public CacheManager cacheManagerWithCaffeine(){
-        System.out.println("This is cacheManagerWithCaffeine");
+        System.out.println("Now is cacheManagerWithCaffeine");
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         Caffeine caffeine = Caffeine.newBuilder()
                 //cache的初始容量值
@@ -62,7 +84,7 @@ public class CacheManagerConfig {
         //使用refreshAfterWrite必须要设置cacheLoader
 //                .refreshAfterWrite(5,TimeUnit.SECONDS);
         cacheManager.setCaffeine(caffeine);
-        cacheManager.setCacheLoader(cacheLoader);
+        //cacheManager.setCacheLoader(cacheLoader);
         cacheManager.setCacheNames(getNames());
 //        cacheManager.setAllowNullValues(false);
         return cacheManager;

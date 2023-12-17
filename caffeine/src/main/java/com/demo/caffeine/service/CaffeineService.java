@@ -1,10 +1,6 @@
 package com.demo.caffeine.service;
 
 import com.demo.caffeine.entity.Employee;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 /**
@@ -65,68 +61,68 @@ public class CaffeineService {
         return new Employee("1", "Kenny", 30);
     }
 
-    @Cacheable(cacheNames = "emps")
-    public Employee getEmployee_byCacheNames(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = {"emps", "caffeine"}) // also can name multiple caches
-    public Employee getEmployee_byCacheNamesList(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = "emps", key = "#id") // #id means id is the key to get value
-    public Employee getEmployee_byCacheNamesAndKey(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = "emps", key = "#root.methodName + '[' + #id + ']'")
-    public Employee getEmployee_byCacheNamesAndSpELKey(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = "emps", keyGenerator = "myKeyGenerator") // This myKeyGenerator is customed by ourselves
-    public Employee getEmployee_byCacheNamesAndKeyGenerator(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = "emps", condition = "#id > 1") // When id > 1, then save the result into cache
-    public Employee getEmployee_byCacheNamesAndCondition(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @Cacheable(cacheNames = "emps", unless = "#id > 1") // When id <= 1, then save the result into cache
-    public Employee getEmployee_byCacheNamesAndUnless(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @CachePut(cacheNames = "emps", key = "#id")
-    public Employee updateEmployee_byCacheNamesAndKey(String id) {
-        System.out.println("Get " + id);
-        return new Employee("1", "Kenny", 30);
-    }
-
-    @CacheEvict(cacheNames = "emps", key = "#id")
-    public void deleteEmployee_byCacheNamesAndKey(String id) {
-        System.out.println("Delete " + id);
-        System.out.println("*** Already deleted ID: " + id);
-    }
-
-    @Caching(put = {
-            @CachePut(cacheNames = "emps", key = "#employee.id"),
-            @CachePut(cacheNames = "emps", key = "#employee.name"),
-            @CachePut(cacheNames = "emps", key = "#employee.age")
-    })
-    public Employee updateEmployee_byCacheNamesAndKey(Employee employee) {
-        System.out.println("Get " + employee.getId());
-        return new Employee("1", "Kenny", 30);
-    }
+    //@Cacheable(cacheNames = "emps")
+    //public Employee getEmployee_byCacheNames(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = {"emps", "caffeine"}) // also can name multiple caches
+    //public Employee getEmployee_byCacheNamesList(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = "emps", key = "#id") // #id means id is the key to get value
+    //public Employee getEmployee_byCacheNamesAndKey(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = "emps", key = "#root.methodName + '[' + #id + ']'")
+    //public Employee getEmployee_byCacheNamesAndSpELKey(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = "emps", keyGenerator = "myKeyGenerator") // This myKeyGenerator is customed by ourselves
+    //public Employee getEmployee_byCacheNamesAndKeyGenerator(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = "emps", condition = "#id > 1") // When id > 1, then save the result into cache
+    //public Employee getEmployee_byCacheNamesAndCondition(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@Cacheable(cacheNames = "emps", unless = "#id > 1") // When id <= 1, then save the result into cache
+    //public Employee getEmployee_byCacheNamesAndUnless(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@CachePut(cacheNames = "emps", key = "#id")
+    //public Employee updateEmployee_byCacheNamesAndKey(String id) {
+    //    System.out.println("Get " + id);
+    //    return new Employee("1", "Kenny", 30);
+    //}
+    //
+    //@CacheEvict(cacheNames = "emps", key = "#id")
+    //public void deleteEmployee_byCacheNamesAndKey(String id) {
+    //    System.out.println("Delete " + id);
+    //    System.out.println("*** Already deleted ID: " + id);
+    //}
+    //
+    //@Caching(put = {
+    //        @CachePut(cacheNames = "emps", key = "#employee.id"),
+    //        @CachePut(cacheNames = "emps", key = "#employee.name"),
+    //        @CachePut(cacheNames = "emps", key = "#employee.age")
+    //})
+    //public Employee updateEmployee_byCacheNamesAndKey(Employee employee) {
+    //    System.out.println("Get " + employee.getId());
+    //    return new Employee("1", "Kenny", 30);
+    //}
 
 }

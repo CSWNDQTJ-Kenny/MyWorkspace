@@ -1,6 +1,8 @@
 package com.demo.caffeine.config;
 
 import com.github.benmanes.caffeine.cache.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +24,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 public class CaffeineCacheConfig {
+
+    @Autowired
+    @Qualifier("SimpleStringCacheLoader")
+    private CacheLoader<String, String> simpleStringCacheLoader;
+
+    @Autowired
+    @Qualifier("FullMethodStringCacheLoader")
+    private CacheLoader<String, String> fullMethodStringCacheLoader;
 
     /**
      * 基于大小：这意味着当缓存大小超过配置的大小限制时会发生回收
@@ -82,10 +92,32 @@ public class CaffeineCacheConfig {
     public Cache<String, String> expireAfterWriteCache() {
         return Caffeine.newBuilder()
                 .recordStats()
-                .expireAfterWrite(10, TimeUnit.SECONDS)
-                //.scheduler(Scheduler.systemScheduler()) // 开启定期清空过期数据
+                .expireAfterWrite(5, TimeUnit.SECONDS)
+                .scheduler(Scheduler.systemScheduler()) // 开启定期清空过期数据
                 .build();
     }
+
+    /**
+     * Test Scheduler for T0PnL Auto Recon Service
+     * @return
+     */
+    @Bean("T0PnLCaffeineCache")
+    public Caffeine<Object, Object> t0PnLCaffeineCache() {
+        return Caffeine.newBuilder()
+                .recordStats()
+                .maximumSize(10)
+                .expireAfterWrite(5, TimeUnit.SECONDS)
+                .scheduler(Scheduler.systemScheduler());// 开启定期清空过期数据
+    }
+    @Bean("T0PnLCache")
+    public Cache<String, String> t0PnLCache() {
+        return Caffeine.newBuilder()
+                .recordStats()
+                .expireAfterWrite(5, TimeUnit.SECONDS)
+                .scheduler(Scheduler.systemScheduler()) // 开启定期清空过期数据
+                .build(simpleStringCacheLoader);
+    }
+
 
 
     /**
@@ -157,7 +189,7 @@ public class CaffeineCacheConfig {
                 .recordStats()
                 .refreshAfterWrite(2, TimeUnit.SECONDS)
                 .expireAfterWrite(3, TimeUnit.SECONDS)
-                .build();
+                .build(fullMethodStringCacheLoader);
     }
 
 
@@ -230,7 +262,7 @@ public class CaffeineCacheConfig {
                 .refreshAfterWrite(5, TimeUnit.SECONDS)
                 //.scheduler(Scheduler.systemScheduler())
                 .removalListener(this::saveRemovalDataIntoDB)
-                .build();
+                .build(fullMethodStringCacheLoader);
     }
 
     /**
