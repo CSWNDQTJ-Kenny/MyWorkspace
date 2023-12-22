@@ -4,9 +4,6 @@ import com.github.benmanes.caffeine.cache.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,11 +26,11 @@ public class CaffeineCacheConfig {
      */
     //@Primary
     @Bean("SizeCache")
-    public Cache<String, String> sizeCache() {
+    public Caffeine<Object, Object> sizeCache() {
         return Caffeine.newBuilder()
                 .recordStats() //开启打点记录，用于统计命中率、被剔除的数量、加载新值所花费时间的平均值【纳秒】等
-                .maximumSize(5)
-                .build();
+                .maximumSize(5); // will return Caffeine
+                //.build(); // will return Cache
     }
 
     /**
@@ -123,7 +120,7 @@ public class CaffeineCacheConfig {
      * 3、使用引用淘汰机制的时候，判断两个key或者两个value是否相同，用的是 ==，而不是equals()，也就是说需要两个key指向同一个对象才能被认为是一致的，这样可能导致缓存命中出现预料之外的问题
      * 总结下来，慎用引用淘汰机制
      *
-     * @return
+     * @return WeakReferenceCache
      */
     @Bean("WeakReferenceCache")
     public Cache<String, String> weakReferenceCache() {
@@ -164,7 +161,7 @@ public class CaffeineCacheConfig {
     /**
      * 充当二级缓存用，生命周期仅活到下个gc
      */
-    private final Map<Integer, WeakReference<Integer>> secondCache = new ConcurrentHashMap<>();
+    //private final Map<Integer, WeakReference<Integer>> secondCache = new ConcurrentHashMap<>();
 
     /**
      * 需求：Caffeine设置了最大缓存个数，会存在一个隐患，那便是到达最大缓存个数的情况下，会导致缓存被清，之后导致频繁读取数据库加载数据的情况，求一解决办法
@@ -224,13 +221,13 @@ public class CaffeineCacheConfig {
      * 注意：这只能做个兜底机制，避免数据丢失
      */
     @Bean("RemovalListenerCache")
-    public Cache<String, String> removalListenerCache() {
+    public Caffeine<String, String> removalListenerCache() {
         return Caffeine.newBuilder()
                 .recordStats()
                 .refreshAfterWrite(5, TimeUnit.SECONDS)
-                //.scheduler(Scheduler.systemScheduler())
-                .removalListener(this::saveRemovalDataIntoDB)
-                .build();
+                .scheduler(Scheduler.systemScheduler())
+                .removalListener(this::saveRemovalDataIntoDB);
+                //.build();
     }
 
     /**

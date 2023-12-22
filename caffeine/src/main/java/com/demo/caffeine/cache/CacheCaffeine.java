@@ -1,7 +1,9 @@
 package com.demo.caffeine.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
 
 /**
  * author  :
@@ -9,10 +11,22 @@ import com.github.benmanes.caffeine.cache.Caffeine;
  * description :
  */
 
+@Configuration
 public class CacheCaffeine {
 
-    Cache<String, String> cache_01 = Caffeine.newBuilder()
-            .maximumSize(100) //
-            .build();
+    @Resource(name = "WeightCache")
+    private Cache weightCache;
+    @Resource(name = "ExpireAfterAccessCache")
+    private Cache expireAfterAccessCache;
+    @Resource(name = "ExpireAfterWriteCache")
+    private Cache expireAfterWriteCache;
+    @Resource(name = "CustomExpiryTimeCache")
+    private Cache customExpiryTimeCache;
+    @Resource(name = "WeakReferenceCache")
+    private Cache weakReferenceCache;
+    @Resource(name = "SoftReferenceCache")
+    private Cache softReferenceCache;
+    @Resource(name = "RefreshAfterWriteCache")
+    private Cache refreshAfterWriteCache;
 
 }
